@@ -189,23 +189,3 @@ smart-campus-system/
                 ├── lecturer/*.html           # Teaching & grading views
                 └── student/*.html            # Registration & transcript views
 ```
-
----
-
-## 8. GitHub Submission (e-campus Ready)
-
-To submit this project to GitHub for your coursework deadline:
-1. Initialize git in the project root:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Smart Campus Management and Academic Information System"
-   ```
-2. Create a new repository on your GitHub account (e.g. `smart-campus-system`).
-3. Link and push your repository:
-   ```bash
-   git remote add origin https://github.com/<your-username>/smart-campus-system.git
-   git branch -M main
-   git push -u origin main
-   ```
-4. Copy your GitHub repository link and submit it on the e-campus portal before the deadline (**25 Sept 2026**).
