@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'dashboard')}">
+<head>
+    <title>Student Dashboard - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <!-- Student Profile Banner -->
+    <div class="campus-card p-4 mb-4 text-white" style="background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%) !important;">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="fw-bold mb-1" th:text="${student.fullName}">Odoch Joel</h3>
+                <p class="mb-0 text-white-50">
+                    Reg No: <span class="text-white fw-bold" th:text="${student.registrationNumber}">STD/2025/001</span> &bull;
+                    Program: <span class="text-white" th:text="${student.program.name}">BSc Computer Science</span> &bull;
+                    Level: <span class="text-white">Year <span th:text="${student.currentYear}">1</span>, Sem <span th:text="${student.currentSemester}">1</span></span>
+                </p>
+            </div>
+            <div class="text-end d-none d-md-block">
+                <span class="badge bg-light text-dark fs-6 py-2 px-3">
+                    <span th:text="${standing}">First Class Honours</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic KPI Metrics -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon blue"><i class="bi bi-award-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-primary" th:text="${cgpa}">0.00</h3>
+                    <div class="text-muted small">Cumulative GPA (CGPA)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon green"><i class="bi bi-graph-up-arrow"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-success" th:text="${semesterGPA}">0.00</h3>
+                    <div class="text-muted small">Current Semester GPA</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon purple"><i class="bi bi-journal-check"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${#lists.size(registrations)}">0</h3>
+                    <div class="text-muted small">Registered Courses</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon orange"><i class="bi bi-calendar-check-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">Active</h3>
+                    <div class="text-muted small">Academic Standing</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registered Courses for Current Term -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-journal-bookmark me-2 text-primary"></i>Current Registered Courses</span>
+                    <a th:href="@{/student/courses/register}" class="btn btn-sm btn-primary">Register Courses</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Course Title</th>
+                                <th>Credit Units</th>
+                                <th>Attendance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reg : ${registrations}">
+                                <td class="fw-bold text-primary" th:text="${reg.course.code}">CS101</td>
+                                <td class="fw-semibold" th:text="${reg.course.title}">Intro to CS</td>
+                                <td><span class="badge bg-light text-dark border" th:text="${reg.course.creditUnits + ' CU'}">3 CU</span></td>
+                                <td>
+                                    <span th:text="${attendanceMap.get(reg.course.id) + '%'}">100%</span>
+                                    <span th:if="${attendanceMap.get(reg.course.id) >= 75.0}" class="badge bg-success-subtle text-success ms-1">Eligible</span>
+                                    <span th:if="${attendanceMap.get(reg.course.id) < 75.0}" class="badge bg-danger-subtle text-danger ms-1">Warning</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${reg.status}">CONFIRMED</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(registrations)}">
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No courses registered for this semester. Click "Register Courses" above.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="campus-card mb-4">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-lightning-charge me-2 text-warning"></i>Quick Links</span>
+                </div>
+                <div class="p-3 d-flex flex-column gap-2">
+                    <a th:href="@{/student/results}" class="btn btn-outline-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-award"></i> View Examination Results
+                    </a>
+                    <a th:href="@{/student/transcript}" class="btn btn-outline-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-file-earmark-text"></i> Official Academic Transcript
+                    </a>
+                    <a th:href="@{/student/attendance}" class="btn btn-outline-success d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar-check"></i> Check Attendance Records
+                    </a>
+                    <a th:href="@{/student/profile}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-person"></i> View My Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Attendance Policy Notice -->
+            <div class="campus-card p-3 bg-light border">
+                <h6 class="fw-bold text-dark mb-1"><i class="bi bi-shield-exclamation text-warning me-1"></i> Examination Policy</h6>
+                <p class="small text-muted mb-0">
+                    A minimum of <strong>75% class attendance</strong> is required to sit for end-of-semester final examinations according to campus academic regulations.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

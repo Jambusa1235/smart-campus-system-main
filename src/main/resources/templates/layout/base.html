@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout(title, content, activeTab)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Smart Campus System</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link th:href="@{/css/custom.css}" rel="stylesheet">
+</head>
+<body class="d-flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar d-flex flex-column flex-shrink-0">
+        <div class="brand">
+            <i class="bi bi-mortarboard-fill fs-3"></i>
+            <div>
+                <div class="lh-1">SmartCampus</div>
+                <small class="text-secondary" style="font-size: 0.65rem; letter-spacing: 1px;">ACADEMIC PORTAL</small>
+            </div>
+        </div>
+
+        <ul class="nav nav-pills flex-column mb-auto py-2">
+            <!-- ADMIN MENU -->
+            <li sec:authorize="hasRole('ADMIN')" class="nav-header">ADMINISTRATION</li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/dashboard}" class="nav-link" th:classappend="${activeTab == 'dashboard' ? 'active' : ''}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/students}" class="nav-link" th:classappend="${activeTab == 'students' ? 'active' : ''}">
+                    <i class="bi bi-people-fill"></i> Students
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/lecturers}" class="nav-link" th:classappend="${activeTab == 'lecturers' ? 'active' : ''}">
+                    <i class="bi bi-person-badge-fill"></i> Lecturers
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/departments}" class="nav-link" th:classappend="${activeTab == 'departments' ? 'active' : ''}">
+                    <i class="bi bi-building"></i> Departments
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/programs}" class="nav-link" th:classappend="${activeTab == 'programs' ? 'active' : ''}">
+                    <i class="bi bi-journal-bookmark-fill"></i> Programs
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/courses}" class="nav-link" th:classappend="${activeTab == 'courses' ? 'active' : ''}">
+                    <i class="bi bi-book-half"></i> Courses
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/assignments}" class="nav-link" th:classappend="${activeTab == 'assignments' ? 'active' : ''}">
+                    <i class="bi bi-person-check-fill"></i> Assign Courses
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/sessions}" class="nav-link" th:classappend="${activeTab == 'sessions' ? 'active' : ''}">
+                    <i class="bi bi-calendar-range-fill"></i> Academic Sessions
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/reports}" class="nav-link" th:classappend="${activeTab == 'reports' ? 'active' : ''}">
+                    <i class="bi bi-bar-chart-line-fill"></i> System Reports
+                </a>
+            </li>
+
+            <!-- LECTURER MENU -->
+            <li sec:authorize="hasRole('LECTURER')" class="nav-header">TEACHING PORTAL</li>
+            <li sec:authorize="hasRole('LECTURER')">
+                <a th:href="@{/lecturer/dashboard}" class="nav-link" th:classappend="${activeTab == 'dashboard' ? 'active' : ''}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li sec:authorize="hasRole('LECTURER')">
+                <a th:href="@{/lecturer/courses}" class="nav-link" th:classappend="${activeTab == 'courses' ? 'active' : ''}">
+                    <i class="bi bi-collection-play-fill"></i> My Courses
+                </a>
+            </li>
+
+            <!-- STUDENT MENU -->
+            <li sec:authorize="hasRole('STUDENT')" class="nav-header">STUDENT PORTAL</li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/dashboard}" class="nav-link" th:classappend="${activeTab == 'dashboard' ? 'active' : ''}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/profile}" class="nav-link" th:classappend="${activeTab == 'profile' ? 'active' : ''}">
+                    <i class="bi bi-person-circle"></i> My Profile
+                </a>
+            </li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/courses/register}" class="nav-link" th:classappend="${activeTab == 'register' ? 'active' : ''}">
+                    <i class="bi bi-pencil-square"></i> Course Registration
+                </a>
+            </li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/courses}" class="nav-link" th:classappend="${activeTab == 'courses' ? 'active' : ''}">
+                    <i class="bi bi-journal-check"></i> Registered Courses
+                </a>
+            </li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/attendance}" class="nav-link" th:classappend="${activeTab == 'attendance' ? 'active' : ''}">
+                    <i class="bi bi-calendar-check-fill"></i> My Attendance
+                </a>
+            </li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/results}" class="nav-link" th:classappend="${activeTab == 'results' ? 'active' : ''}">
+                    <i class="bi bi-award-fill"></i> Results & GPA
+                </a>
+            </li>
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/transcript}" class="nav-link" th:classappend="${activeTab == 'transcript' ? 'active' : ''}">
+                    <i class="bi bi-file-earmark-text-fill"></i> Academic Transcript
+                </a>
+            </li>
+        </ul>
+
+        <!-- Bottom User Card in Sidebar -->
+        <div class="p-3 border-top border-secondary border-opacity-25">
+            <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px;">
+                    <span sec:authentication="name" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">U</span>
+                </div>
+                <div class="overflow-hidden">
+                    <div class="fw-bold text-truncate text-white small" sec:authentication="name">Username</div>
+                    <span class="badge bg-secondary" style="font-size: 0.65rem;" sec:authentication="principal.authorities[0].authority">ROLE</span>
+                </div>
+            </div>
+            <form th:action="@{/logout}" method="post" class="mt-2">
+                <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-1">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="d-flex flex-column flex-grow-1 min-vh-100">
+        <!-- Topbar -->
+        <header class="topbar d-flex justify-content-between align-items-center no-print">
+            <div class="d-flex align-items-center gap-2">
+                <span class="fs-5 fw-bold text-dark" th:replace="${title}">Page Title</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end d-none d-md-block">
+                    <small class="text-muted d-block" th:text="${#temporals.format(#temporals.createNow(), 'EEEE, d MMMM yyyy')}">Date</small>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle">
+                        <i class="bi bi-check-circle-fill me-1"></i> System Online
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Flash Alerts -->
+        <div class="px-4 pt-3 no-print">
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${successMessage}">Operation successful</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${errorMessage}">An error occurred</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <!-- Dynamic Body Content -->
+        <main class="main-content">
+            <div th:replace="${content}"></div>
+        </main>
+    </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

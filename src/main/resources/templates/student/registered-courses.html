@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'courses')}">
+<head>
+    <title>My Registered Courses - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">My Registered Courses</h4>
+            <p class="text-muted small mb-0">Courses enrolled for the current academic session.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary fs-6 py-2 px-3" th:text="'Total Load: ' + ${totalCredits} + ' Credit Units'">Total Load: 14 CU</span>
+            <a th:href="@{/student/courses/register}" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square me-1"></i> Add Courses
+            </a>
+        </div>
+    </div>
+
+    <!-- Current Term Courses -->
+    <div class="campus-card mb-4">
+        <div class="card-header">
+            <span class="fw-bold">
+                <i class="bi bi-journal-check me-2 text-primary"></i>
+                <span th:text="${currentYear != null ? currentYear.name : ''}">2025/2026</span> -
+                <span th:text="${currentSemester != null ? currentSemester.name : ''}">Semester 1</span>
+            </span>
+            <span class="badge bg-success" th:text="${#lists.size(currentRegistrations) + ' Courses'}">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Course Title</th>
+                        <th>Credit Units</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="r : ${currentRegistrations}">
+                        <td class="fw-bold text-primary" th:text="${r.course.code}">CS101</td>
+                        <td class="fw-semibold" th:text="${r.course.title}">Data Structures</td>
+                        <td><span class="badge bg-light text-dark border" th:text="${r.course.creditUnits + ' CU'}">3 CU</span></td>
+                        <td th:text="${r.course.department.name}">Computer Science</td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${r.status}">CONFIRMED</span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/student/courses/drop/{id}(id=${r.id})}" class="btn btn-sm btn-outline-danger py-1"
+                               onclick="return confirm('Are you sure you want to drop this course?')">Drop</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(currentRegistrations)}">
+                        <td colspan="6" class="text-center text-muted py-4">No active courses registered for this semester.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

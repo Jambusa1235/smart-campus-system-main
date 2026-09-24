@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Campus Academic System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link th:href="@{/css/custom.css}" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            max-width: 950px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .login-sidebar {
+            background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+            color: #fff;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .demo-badge {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        .demo-badge:hover {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card row g-0">
+    <!-- Left Hero Panel -->
+    <div class="col-lg-5 login-sidebar">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-mortarboard-fill fs-1 text-info"></i>
+                <div>
+                    <h3 class="fw-bold mb-0 text-white">Smart Campus</h3>
+                    <small class="text-info text-uppercase" style="letter-spacing: 1px;">Academic Information System</small>
+                </div>
+            </div>
+            <p class="text-white-50 lead fs-6">
+                Centralized platform for comprehensive student management, course registration, attendance tracking, and automated transcript generation.
+            </p>
+            <ul class="list-unstyled text-white-50 small mt-4">
+                <li class="mb-2"><i class="bi bi-check2-circle text-info me-2"></i> Role-Based Authentication</li>
+                <li class="mb-2"><i class="bi bi-check2-circle text-info me-2"></i> Real-time Attendance & Eligibility</li>
+                <li class="mb-2"><i class="bi bi-check2-circle text-info me-2"></i> Automated Grade & GPA Engine</li>
+                <li class="mb-2"><i class="bi bi-check2-circle text-info me-2"></i> Official Transcripts & Reports</li>
+            </ul>
+        </div>
+        <div class="text-white-50 small pt-4 border-top border-white-50 border-opacity-25">
+            Java Course Work Project &bull; 2026
+        </div>
+    </div>
+
+    <!-- Right Login Form Panel -->
+    <div class="col-lg-7 p-4 p-md-5">
+        <h4 class="fw-bold text-dark mb-1">Sign In</h4>
+        <p class="text-muted small mb-4">Enter your academic credentials to access your portal.</p>
+
+        <!-- Alerts -->
+        <div th:if="${errorMessage}" class="alert alert-danger py-2 small" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i> <span th:text="${errorMessage}">Invalid credentials</span>
+        </div>
+        <div th:if="${logoutMessage}" class="alert alert-info py-2 small" role="alert">
+            <i class="bi bi-info-circle-fill me-1"></i> <span th:text="${logoutMessage}">Logged out</span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label fw-semibold small text-secondary">Username / ID Number</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-person text-muted"></i></span>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="e.g. admin or STD/2025/001" required autofocus>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label fw-semibold small text-secondary">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-lock text-muted"></i></span>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mb-4 shadow-sm">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Login to Portal
+            </button>
+        </form>
+
+        <!-- Quick Demo Accounts -->
+        <div class="border-top pt-3">
+            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Quick Demo Logins (Click to autofill)
+            </small>
+            <div class="row g-2 mt-1">
+                <div class="col-6">
+                    <div class="demo-badge" onclick="fillLogin('admin', 'admin123')">
+                        <span class="badge bg-danger mb-1">Admin</span>
+                        <div class="fw-bold small">admin</div>
+                        <small class="text-muted" style="font-size: 0.7rem;">Pass: admin123</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="demo-badge" onclick="fillLogin('lect.sarah', 'password123')">
+                        <span class="badge bg-primary mb-1">Lecturer</span>
+                        <div class="fw-bold small">lect.sarah</div>
+                        <small class="text-muted" style="font-size: 0.7rem;">Pass: password123</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="demo-badge" onclick="fillLogin('lect.brian', 'password123')">
+                        <span class="badge bg-primary mb-1">Lecturer</span>
+                        <div class="fw-bold small">lect.brian</div>
+                        <small class="text-muted" style="font-size: 0.7rem;">Pass: password123</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="demo-badge" onclick="fillLogin('std101', 'password123')">
+                        <span class="badge bg-success mb-1">Student</span>
+                        <div class="fw-bold small">std101</div>
+                        <small class="text-muted" style="font-size: 0.7rem;">Pass: password123</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

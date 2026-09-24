@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'programs')}">
+<head>
+    <title>Academic Programs - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="row g-4">
+        <!-- Add Program Form -->
+        <div class="col-lg-4">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-plus-circle-fill me-2 text-primary"></i>Add Academic Program</span>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/programs/save}" th:object="${newProgram}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Program Code *</label>
+                            <input type="text" class="form-control" th:field="*{code}" placeholder="e.g. BCS or BSE" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Program Name *</label>
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="e.g. Bachelor of Science in Computer Science" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Department *</label>
+                            <select class="form-select" th:field="*{department}" required>
+                                <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name + ' (' + d.code + ')'}">Dept</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Duration (Years)</label>
+                                <input type="number" class="form-control" th:field="*{durationYears}" min="1" max="6" value="3" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Degree Type</label>
+                                <select class="form-select" th:field="*{degreeType}">
+                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Master">Master</option>
+                                    <option value="Diploma">Diploma</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                            <i class="bi bi-save me-1"></i> Save Program
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Programs List Table -->
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-journal-bookmark-fill me-2 text-primary"></i>Offered Degree Programs</span>
+                    <span class="badge bg-primary" th:text="${#lists.size(programs) + ' Programs'}">0 Programs</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Program Title</th>
+                                <th>Department</th>
+                                <th>Duration</th>
+                                <th>Type</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="prog : ${programs}">
+                                <td class="fw-bold text-primary" th:text="${prog.code}">BCS</td>
+                                <td class="fw-semibold" th:text="${prog.name}">BSc Computer Science</td>
+                                <td>
+                                    <span class="badge bg-secondary-subtle text-secondary" th:text="${prog.department.code}">CS</span>
+                                </td>
+                                <td th:text="${prog.durationYears + ' Years'}">3 Years</td>
+                                <td th:text="${prog.degreeType}">Bachelor</td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/programs/delete/{id}(id=${prog.id})}" class="btn btn-sm btn-outline-danger py-1 px-2"
+                                       onclick="return confirm('Delete this program?')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(programs)}">
+                                <td colspan="6" class="text-center text-muted py-4">No programs defined yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

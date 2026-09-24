@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'courses')}">
+<head>
+    <title>My Assigned Courses - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">My Teaching Courses</h4>
+            <p class="text-muted small mb-0">List of all courses assigned to your profile across academic terms.</p>
+        </div>
+    </div>
+
+    <div class="campus-card">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-book-half me-2 text-primary"></i>Assigned Course Units</span>
+            <span class="badge bg-primary" th:text="${#lists.size(assignments) + ' Assignments'}">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Title</th>
+                        <th>Credit Units</th>
+                        <th>Academic Session</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="a : ${assignments}">
+                        <td class="fw-bold text-primary" th:text="${a.course.code}">CS102</td>
+                        <td class="fw-semibold" th:text="${a.course.title}">Data Structures & Algorithms</td>
+                        <td><span class="badge bg-light text-dark border" th:text="${a.course.creditUnits + ' CU'}">4 CU</span></td>
+                        <td>
+                            <span class="badge bg-secondary-subtle text-secondary" th:text="${a.academicYear.name}">2025/2026</span>
+                            <span class="badge bg-info-subtle text-info border" th:text="${a.semester.name}">Sem 1</span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/lecturer/courses/{id}/students(id=${a.course.id})}" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="bi bi-people"></i> Roster
+                            </a>
+                            <a th:href="@{/lecturer/courses/{id}/attendance(id=${a.course.id})}" class="btn btn-sm btn-outline-success me-1">
+                                <i class="bi bi-calendar-check"></i> Attendance
+                            </a>
+                            <a th:href="@{/lecturer/courses/{id}/marks(id=${a.course.id})}" class="btn btn-sm btn-outline-warning text-dark me-1">
+                                <i class="bi bi-pencil-square"></i> Marks
+                            </a>
+                            <a th:href="@{/lecturer/courses/{id}/report(id=${a.course.id})}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-bar-chart"></i> Report
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(assignments)}">
+                        <td colspan="5" class="text-center text-muted py-5">No course assignments found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

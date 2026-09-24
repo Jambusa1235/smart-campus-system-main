@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'departments')}">
+<head>
+    <title>Academic Departments - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="row g-4">
+        <!-- Add Department Form -->
+        <div class="col-lg-4">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-plus-circle-fill me-2 text-primary"></i>Add Department</span>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/departments/save}" th:object="${newDepartment}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Department Code *</label>
+                            <input type="text" class="form-control" th:field="*{code}" placeholder="e.g. CS or EE" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Department Name *</label>
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="e.g. Computer Science" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Description</label>
+                            <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Department overview..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                            <i class="bi bi-save me-1"></i> Save Department
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments List Table -->
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-building me-2 text-primary"></i>All Departments</span>
+                    <span class="badge bg-primary" th:text="${#lists.size(departments) + ' Departments'}">0 Departments</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Department Name</th>
+                                <th>Description</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="dept : ${departments}">
+                                <td class="fw-bold text-primary" th:text="${dept.code}">CS</td>
+                                <td class="fw-semibold" th:text="${dept.name}">Computer Science</td>
+                                <td class="text-muted small" th:text="${dept.description}">Department of Computing</td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/departments/delete/{id}(id=${dept.id})}" class="btn btn-sm btn-outline-danger py-1 px-2"
+                                       onclick="return confirm('Delete this department?')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(departments)}">
+                                <td colspan="4" class="text-center text-muted py-4">No departments found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

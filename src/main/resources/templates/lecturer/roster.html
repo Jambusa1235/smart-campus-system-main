@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'courses')}">
+<head>
+    <title th:text="'Student Roster: ' + ${course.code} + ' - Smart Campus'">Student Roster</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">
+                <span class="text-primary" th:text="${course.code}">CS102</span>:
+                <span th:text="${course.title}">Data Structures</span>
+            </h4>
+            <p class="text-muted small mb-0">Registered student roster for current term (<span th:text="${currentYear != null ? currentYear.name : ''}">2025/2026</span> - <span th:text="${currentSemester != null ? currentSemester.name : ''}">Sem 1</span>).</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/lecturer/courses/{id}/attendance(id=${course.id})}" class="btn btn-outline-success">
+                <i class="bi bi-calendar-check me-1"></i> Attendance
+            </a>
+            <a th:href="@{/lecturer/courses/{id}/marks(id=${course.id})}" class="btn btn-primary">
+                <i class="bi bi-pencil-square me-1"></i> Enter Marks
+            </a>
+        </div>
+    </div>
+
+    <div class="campus-card">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-people-fill me-2 text-primary"></i>Enrolled Students</span>
+            <span class="badge bg-primary" th:text="${#lists.size(registrations) + ' Enrolled'}">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Reg Number</th>
+                        <th>Full Name</th>
+                        <th>Program</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Registration Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reg, stat : ${registrations}">
+                        <td th:text="${stat.count}">1</td>
+                        <td class="fw-bold text-primary" th:text="${reg.student.registrationNumber}">STD/2025/001</td>
+                        <td class="fw-semibold" th:text="${reg.student.fullName}">John Doe</td>
+                        <td th:text="${reg.student.program.code}">BCS</td>
+                        <td th:text="${reg.student.gender}">Male</td>
+                        <td th:text="${reg.student.phoneNumber}">+256</td>
+                        <td class="text-muted small" th:text="${#temporals.format(reg.registrationDate, 'dd MMM yyyy')}">Date</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(registrations)}">
+                        <td colspan="7" class="text-center text-muted py-5">No students registered for this course yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

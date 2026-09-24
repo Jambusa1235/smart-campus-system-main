@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'lecturers')}">
+<head>
+    <title th:text="${lecturer.id == null ? 'Add Lecturer' : 'Edit Lecturer'} + ' - Smart Campus'">Lecturer Form</title>
+</head>
+<body>
+<div id="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold">
+                        <i class="bi bi-person-fill-add me-2 text-primary"></i>
+                        <span th:text="${lecturer.id == null ? 'Add New Lecturer' : 'Edit Lecturer Details'}">Lecturer Form</span>
+                    </span>
+                    <a th:href="@{/admin/lecturers}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to List
+                    </a>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/lecturers/save}" th:object="${lecturer}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:if="*{user != null}" th:field="*{user.id}">
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Staff Number *</label>
+                                <input type="text" class="form-control" th:field="*{staffNumber}" placeholder="e.g. LEC003" required>
+                                <small class="text-muted" style="font-size: 0.75rem;">Used as the lecturer's login username.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Title</label>
+                                <select class="form-select" th:field="*{title}">
+                                    <option value="Dr.">Dr.</option>
+                                    <option value="Prof.">Prof.</option>
+                                    <option value="Mr.">Mr.</option>
+                                    <option value="Ms.">Ms.</option>
+                                    <option value="Eng.">Eng.</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Full Name *</label>
+                            <input type="text" class="form-control" th:field="*{fullName}" placeholder="e.g. Alan Smith" required>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Email Address</label>
+                                <input type="email" class="form-control" th:field="*{email}" placeholder="lecturer@campus.ac.ug">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Phone Number</label>
+                                <input type="text" class="form-control" th:field="*{phoneNumber}" placeholder="+256-700-000000">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Department</label>
+                                <select class="form-select" th:field="*{department}">
+                                    <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name + ' (' + d.code + ')'}">Department</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Office Location / Room</label>
+                                <input type="text" class="form-control" th:field="*{officeRoom}" placeholder="e.g. Block B, Room 204">
+                            </div>
+                        </div>
+
+                        <div class="mb-4" th:if="${lecturer.id == null}">
+                            <label class="form-label fw-semibold small">Account Password</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="rawPassword" name="rawPassword" placeholder="Auto-generated if left blank">
+                                <button class="btn btn-outline-secondary" type="button" onclick="generateRandomPassword('rawPassword')">
+                                    <i class="bi bi-shuffle me-1"></i> Generate
+                                </button>
+                            </div>
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                <i class="bi bi-info-circle me-1"></i>Leave blank for system to automatically create a secure password, or click Generate.
+                            </small>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/admin/lecturers}" class="btn btn-light border">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                                <i class="bi bi-save me-1"></i> Save Lecturer Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

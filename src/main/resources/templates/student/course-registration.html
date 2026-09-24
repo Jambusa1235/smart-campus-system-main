@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'register')}">
+<head>
+    <title>Course Registration - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Semester Course Registration</h4>
+            <p class="text-muted small mb-0">
+                Enroll in your prescribed course units for
+                <span class="text-primary fw-semibold" th:text="${currentYear != null ? currentYear.name : ''}">2025/2026</span> -
+                <span class="text-primary fw-semibold" th:text="${currentSemester != null ? currentSemester.name : ''}">Semester 1</span>.
+            </p>
+        </div>
+        <a th:href="@{/student/courses}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-journal-check me-1"></i> View Registered Courses
+        </a>
+    </div>
+
+    <!-- Available Courses to Register -->
+    <div class="campus-card mb-4">
+        <div class="card-header bg-light">
+            <span class="fw-bold"><i class="bi bi-plus-circle me-2 text-primary"></i>Available Course Units for Your Program</span>
+            <span class="badge bg-secondary" th:text="${student.program.code}">BCS</span>
+        </div>
+        <div class="p-4">
+            <form th:action="@{/student/courses/register/save}" method="post">
+                <div class="table-responsive mb-4">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Select</th>
+                                <th>Code</th>
+                                <th>Course Title</th>
+                                <th>Credit Units</th>
+                                <th>Year Level</th>
+                                <th>Semester</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="course : ${availableCourses}">
+                                <td>
+                                    <input type="checkbox" class="form-check-input" name="courseIds" th:value="${course.id}">
+                                </td>
+                                <td class="fw-bold text-primary" th:text="${course.code}">CS105</td>
+                                <td class="fw-semibold" th:text="${course.title}">Computer Networks</td>
+                                <td><span class="badge bg-light text-dark border" th:text="${course.creditUnits + ' CU'}">3 CU</span></td>
+                                <td>Year <span th:text="${course.yearLevel}">1</span></td>
+                                <td>Sem <span th:text="${course.semesterOffered}">1</span></td>
+                                <td class="text-muted small" th:text="${course.description}">Foundations of networking</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(availableCourses)}">
+                                <td colspan="7" class="text-center text-muted py-5">
+                                    <i class="bi bi-check-circle display-6 d-block mb-2 text-success"></i>
+                                    All available courses for this semester are already registered!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-end" th:unless="${#lists.isEmpty(availableCourses)}">
+                    <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">
+                        <i class="bi bi-check2-circle me-1"></i> Confirm Course Registration
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Already Registered This Term -->
+    <div class="campus-card">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-check2-all me-2 text-success"></i>Courses Already Registered for This Term</span>
+            <span class="badge bg-success" th:text="${#lists.size(registered) + ' Courses'}">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Course Title</th>
+                        <th>Credit Units</th>
+                        <th>Registered Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="r : ${registered}">
+                        <td class="fw-bold text-primary" th:text="${r.course.code}">CS101</td>
+                        <td class="fw-semibold" th:text="${r.course.title}">Intro to Computer Science</td>
+                        <td><span class="badge bg-light text-dark border" th:text="${r.course.creditUnits + ' CU'}">3 CU</span></td>
+                        <td class="text-muted small" th:text="${#temporals.format(r.registrationDate, 'dd MMM yyyy')}">Date</td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${r.status}">CONFIRMED</span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/student/courses/drop/{id}(id=${r.id})}" class="btn btn-sm btn-outline-danger py-1"
+                               onclick="return confirm('Are you sure you want to drop this course?')">Drop</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(registered)}">
+                        <td colspan="6" class="text-center text-muted py-4">No courses registered yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

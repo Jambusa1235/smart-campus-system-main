@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'assignments')}">
+<head>
+    <title>Assign Lecturers to Courses - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="row g-4">
+        <!-- Assignment Form -->
+        <div class="col-lg-4">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-person-plus me-2 text-primary"></i>Assign Course</span>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/assignments/save}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Course Unit *</label>
+                            <select class="form-select" name="courseId" required>
+                                <option th:each="c : ${courses}" th:value="${c.id}" th:text="${c.code + ' - ' + c.title}">Course</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Lecturer *</label>
+                            <select class="form-select" name="lecturerId" required>
+                                <option th:each="l : ${lecturers}" th:value="${l.id}" th:text="${l.title + ' ' + l.fullName + ' (' + l.staffNumber + ')'}">Lecturer</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Academic Year *</label>
+                            <select class="form-select" name="academicYearId" required>
+                                <option th:each="y : ${academicYears}" th:value="${y.id}" th:text="${y.name}" th:selected="${y.isCurrent}">Year</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small">Semester *</label>
+                            <select class="form-select" name="semesterId" required>
+                                <option th:each="s : ${semesters}" th:value="${s.id}" th:text="${s.name + ' (' + s.academicYear.name + ')'}" th:selected="${s.isCurrent}">Semester</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                            <i class="bi bi-check-circle me-1"></i> Save Course Assignment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignments List Table -->
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-person-check-fill me-2 text-primary"></i>Active Course Assignments</span>
+                    <span class="badge bg-primary" th:text="${#lists.size(assignments) + ' Assigned'}">0 Assigned</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Lecturer</th>
+                                <th>Academic Session</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="a : ${assignments}">
+                                <td>
+                                    <strong class="text-primary" th:text="${a.course.code}">CS102</strong>
+                                    <div class="text-muted small" th:text="${a.course.title}">Data Structures</div>
+                                </td>
+                                <td>
+                                    <strong th:text="${a.lecturer.title + ' ' + a.lecturer.fullName}">Dr. Smith</strong>
+                                    <div class="text-muted small" th:text="${a.lecturer.staffNumber}">LEC001</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border" th:text="${a.academicYear.name}">2025/2026</span>
+                                    <span class="badge bg-info-subtle text-info border" th:text="${a.semester.name}">Sem 1</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/assignments/delete/{id}(id=${a.id})}" class="btn btn-sm btn-outline-danger py-1 px-2"
+                                       onclick="return confirm('Remove this assignment?')" title="Remove">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(assignments)}">
+                                <td colspan="4" class="text-center text-muted py-4">No course assignments made yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'reports')}">
+<head>
+    <title>System Academic Reports - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">System Academic Reports</h4>
+            <p class="text-muted small mb-0">Overview of institutional enrollment, student distribution and course statistics.</p>
+        </div>
+        <button onclick="window.print()" class="btn btn-outline-dark btn-print">
+            <i class="bi bi-printer me-1"></i> Print Summary Report
+        </button>
+    </div>
+
+    <!-- Summary KPI Counters -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon blue"><i class="bi bi-mortarboard-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${totalStudents}">0</h3>
+                    <div class="text-muted small">Total Registered Students</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon green"><i class="bi bi-person-workspace"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${totalLecturers}">0</h3>
+                    <div class="text-muted small">Total Faculty Lecturers</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon purple"><i class="bi bi-journal-bookmark-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${#lists.size(programs)}">0</h3>
+                    <div class="text-muted small">Total Academic Programs</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Enrollment by Program -->
+    <div class="campus-card mb-4">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-table me-2 text-primary"></i>Student Enrollment Roster</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Registration No</th>
+                        <th>Student Name</th>
+                        <th>Program</th>
+                        <th>Current Year</th>
+                        <th>Semester</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${students}">
+                        <td class="fw-bold text-primary" th:text="${s.registrationNumber}">STD/2025/001</td>
+                        <td class="fw-semibold" th:text="${s.fullName}">John Doe</td>
+                        <td th:text="${s.program.name + ' (' + s.program.code + ')'}">BSc CS</td>
+                        <td>Year <span th:text="${s.currentYear}">1</span></td>
+                        <td>Semester <span th:text="${s.currentSemester}">1</span></td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${s.status}">ACTIVE</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

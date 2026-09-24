@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'courses')}">
+<head>
+    <title th:text="'Take Attendance: ' + ${course.code} + ' - Smart Campus'">Attendance Tracker</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">
+                Attendance Register: <span class="text-primary" th:text="${course.code}">CS102</span>
+            </h4>
+            <p class="text-muted small mb-0" th:text="${course.title}">Data Structures & Algorithms</p>
+        </div>
+        <a th:href="@{/lecturer/courses/{id}/students(id=${course.id})}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Roster
+        </a>
+    </div>
+
+    <!-- Attendance Form -->
+    <div class="campus-card mb-4">
+        <div class="card-header bg-light">
+            <span class="fw-bold"><i class="bi bi-calendar-check me-2 text-success"></i>Record Lecture Session Attendance</span>
+        </div>
+        <div class="p-4">
+            <form th:action="@{/lecturer/courses/{id}/attendance/save(id=${course.id})}" method="post">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Session Date *</label>
+                        <input type="date" class="form-control" name="attendanceDate" th:value="${selectedDate}" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold small">Lecture Topic / Notes</label>
+                        <input type="text" class="form-control" name="topic" placeholder="e.g. Lecture 3: Binary Search Trees & AVL Trees">
+                    </div>
+                </div>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Reg Number</th>
+                                <th>Student Name</th>
+                                <th>Attendance Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reg : ${registrations}">
+                                <td class="fw-bold text-primary" th:text="${reg.student.registrationNumber}">STD/2025/001</td>
+                                <td class="fw-semibold" th:text="${reg.student.fullName}">John Doe</td>
+                                <td>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check" th:each="st : ${statuses}">
+                                            <input class="form-check-input" type="radio"
+                                                   th:name="'status_' + ${reg.student.id}"
+                                                   th:id="'st_' + ${reg.student.id} + '_' + ${st}"
+                                                   th:value="${st}"
+                                                   th:checked="${attendanceMap.containsKey(reg.student.id) ? attendanceMap.get(reg.student.id).status == st : st.name() == 'PRESENT'}">
+                                            <label class="form-check-label small" th:for="'st_' + ${reg.student.id} + '_' + ${st}" th:text="${st}">
+                                                PRESENT
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(registrations)}">
+                                <td colspan="3" class="text-center text-muted py-4">No enrolled students in this course.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-end" th:unless="${#lists.isEmpty(registrations)}">
+                    <button type="submit" class="btn btn-success px-4 fw-semibold">
+                        <i class="bi bi-check2-all me-1"></i> Save Attendance Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Past Attendance Sessions Log -->
+    <div class="campus-card">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>Past Recorded Sessions Log</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>Status</th>
+                        <th>Topic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="att : ${allCourseAttendance}">
+                        <td class="fw-bold" th:text="${att.attendanceDate}">2025-09-12</td>
+                        <td th:text="${att.student.fullName + ' (' + att.student.registrationNumber + ')'}">John Doe</td>
+                        <td>
+                            <span th:class="'badge badge-' + ${#strings.toLowerCase(att.status)}" th:text="${att.status}">PRESENT</span>
+                        </td>
+                        <td class="text-muted small" th:text="${att.topic}">Topic</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(allCourseAttendance)}">
+                        <td colspan="4" class="text-center text-muted py-4">No attendance sessions recorded yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

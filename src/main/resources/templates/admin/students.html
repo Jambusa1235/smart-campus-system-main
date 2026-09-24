@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'students')}">
+<head>
+    <title>Manage Students - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Student Management</h4>
+            <p class="text-muted small mb-0">Register, manage student biodata, enrolled programs and account statuses.</p>
+        </div>
+        <a th:href="@{/admin/students/new}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-person-plus-fill me-1"></i> Register New Student
+        </a>
+    </div>
+
+    <!-- Credentials Alert Box when password generated or reset -->
+    <div th:if="${generatedPassword}" class="alert alert-warning border border-warning-subtle shadow-sm p-3 mb-4 rounded-3">
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-key-fill fs-2 text-warning"></i>
+            <div>
+                <h6 class="fw-bold mb-1 text-dark">User Account Credentials Created / Reset:</h6>
+                <div class="small text-muted">
+                    Username: <code class="fw-bold text-primary fs-6" th:text="${newUsername}">STD/2025/001</code> &bull;
+                    Password: <code class="fw-bold text-danger fs-6 bg-light p-1 rounded border" th:text="${generatedPassword}">password</code>
+                </div>
+                <small class="text-secondary d-block mt-1">Please copy and provide these credentials to the student.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="campus-card">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-people-fill me-2 text-primary"></i>All Registered Students</span>
+            <span class="badge bg-primary" th:text="${#lists.size(students) + ' Students'}">0 Students</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Registration No</th>
+                        <th>Full Name</th>
+                        <th>Gender</th>
+                        <th>Program</th>
+                        <th>Level</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student : ${students}">
+                        <td class="fw-bold text-primary" th:text="${student.registrationNumber}">STD/2025/001</td>
+                        <td class="fw-semibold" th:text="${student.fullName}">John Doe</td>
+                        <td th:text="${student.gender}">Male</td>
+                        <td>
+                            <span class="badge bg-secondary-subtle text-secondary" th:text="${student.program.code}">BCS</span>
+                            <small class="text-muted d-block" style="font-size: 0.72rem;" th:text="${student.program.name}">Computer Science</small>
+                        </td>
+                        <td>Year <span th:text="${student.currentYear}">1</span>, Sem <span th:text="${student.currentSemester}">1</span></td>
+                        <td th:text="${student.phoneNumber != null ? student.phoneNumber : 'N/A'}">+256-700</td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${student.status}">ACTIVE</span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/admin/students/reset-password/{id}(id=${student.id})}" class="btn btn-sm btn-outline-warning py-1 px-2 me-1"
+                               onclick="return confirm('Generate a new system password for this student?')" title="Generate / Reset Password">
+                                <i class="bi bi-key text-dark"></i>
+                            </a>
+                            <a th:href="@{/admin/students/edit/{id}(id=${student.id})}" class="btn btn-sm btn-outline-primary py-1 px-2 me-1" title="Edit Student">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a th:href="@{/admin/students/delete/{id}(id=${student.id})}" class="btn btn-sm btn-outline-danger py-1 px-2"
+                               onclick="return confirm('Are you sure you want to delete this student record?')" title="Delete Student">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(students)}">
+                        <td colspan="8" class="text-center text-muted py-5">
+                            <i class="bi bi-people display-6 d-block mb-2 text-secondary"></i>
+                            No students currently registered in the system.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

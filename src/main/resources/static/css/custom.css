@@ -1,0 +1,227 @@
+:root {
+    --primary-color: #1e3a8a;
+    --primary-hover: #1e40af;
+    --secondary-color: #0f766e;
+    --accent-color: #f59e0b;
+    --sidebar-width: 260px;
+    --body-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    color: #f1f5f9;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar .brand {
+    padding: 1.5rem 1.25rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar .nav-link {
+    color: #cbd5e1;
+    padding: 0.85rem 1.25rem;
+    border-radius: 8px;
+    margin: 0.2rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.sidebar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.sidebar .nav-link.active {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.sidebar .nav-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1.25rem 1.25rem 0.5rem;
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+/* Top Navbar */
+.topbar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.85rem 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+/* KPI Metric Cards */
+.kpi-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+}
+
+.kpi-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+}
+
+.kpi-icon.blue { background: #eff6ff; color: #2563eb; }
+.kpi-icon.green { background: #f0fdf4; color: #16a34a; }
+.kpi-icon.purple { background: #faf5ff; color: #9333ea; }
+.kpi-icon.orange { background: #fff7ed; color: #ea580c; }
+
+/* Modern Card */
+.campus-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    overflow: hidden;
+}
+
+.campus-card .card-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Data Tables */
+.table-campus th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-top: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.9rem 1rem;
+}
+
+.table-campus td {
+    padding: 0.9rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    color: #334155;
+}
+
+/* Attendance Badge Colors */
+.badge-present { background-color: #22c55e; color: #fff; }
+.badge-absent { background-color: #ef4444; color: #fff; }
+.badge-late { background-color: #f59e0b; color: #fff; }
+.badge-excused { background-color: #06b6d4; color: #fff; }
+
+/* Grade Badge Colors */
+.badge-grade-a { background-color: #15803d; color: #fff; }
+.badge-grade-b { background-color: #0284c7; color: #fff; }
+.badge-grade-c { background-color: #d97706; color: #fff; }
+.badge-grade-d { background-color: #e11d48; color: #fff; }
+.badge-grade-f { background-color: #991b1b; color: #fff; }
+
+/* Official Transcript Stylesheet (Print Ready) */
+.transcript-box {
+    background: #fff;
+    padding: 3rem 3.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.transcript-header {
+    text-align: center;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.transcript-header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #0f172a;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+}
+
+.transcript-header h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.25rem;
+}
+
+@media print {
+    body {
+        background: #fff !important;
+    }
+    .sidebar, .topbar, .btn-print, .no-print {
+        display: none !important;
+    }
+    .main-content {
+        padding: 0 !important;
+    }
+    .transcript-box {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+}

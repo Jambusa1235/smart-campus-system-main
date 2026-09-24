@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'dashboard')}">
+<head>
+    <title>Admin Dashboard - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <!-- Active Session Indicator -->
+    <div class="alert alert-primary d-flex align-items-center justify-content-between p-3 mb-4 rounded-3 shadow-sm">
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-info-circle-fill fs-3 text-primary"></i>
+            <div>
+                <strong class="d-block">Current Active Academic Session</strong>
+                <span class="text-secondary small">
+                    Academic Year: <span class="badge bg-primary" th:text="${currentYear != null ? currentYear.name : 'Not Configured'}">2025/2026</span>
+                    &bull; Semester: <span class="badge bg-info text-dark" th:text="${currentSemester != null ? currentSemester.name : 'Not Configured'}">Semester 1</span>
+                </span>
+            </div>
+        </div>
+        <a th:href="@{/admin/sessions}" class="btn btn-sm btn-outline-primary fw-semibold">
+            <i class="bi bi-gear-fill me-1"></i> Manage Sessions
+        </a>
+    </div>
+
+    <!-- KPI Metric Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon blue"><i class="bi bi-people-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${totalStudents}">0</h3>
+                    <div class="text-muted small">Total Students</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon purple"><i class="bi bi-person-badge-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${totalLecturers}">0</h3>
+                    <div class="text-muted small">Active Lecturers</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon green"><i class="bi bi-book-half"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${totalCourses}">0</h3>
+                    <div class="text-muted small">Active Courses</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon orange"><i class="bi bi-building"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0" th:text="${totalDepartments}">0</h3>
+                    <div class="text-muted small">Departments</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation & Recent Students -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Enrolled Students</span>
+                    <a th:href="@{/admin/students}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Reg No</th>
+                                <th>Full Name</th>
+                                <th>Program</th>
+                                <th>Year/Sem</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="student : ${recentStudents}">
+                                <td class="fw-bold" th:text="${student.registrationNumber}">STD/2025/001</td>
+                                <td th:text="${student.fullName}">Odoch joel</td>
+                                <td th:text="${student.program.code}">BCS</td>
+                                <td>Year <span th:text="${student.currentYear}">1</span>, Sem <span th:text="${student.currentSemester}">1</span></td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${student.status}">ACTIVE</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/students/edit/{id}(id=${student.id})}" class="btn btn-sm btn-light border py-0 px-2" title="Edit">
+                                        <i class="bi bi-pencil-square text-primary"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(recentStudents)}">
+                                <td colspan="6" class="text-center text-muted py-4">No students registered yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Quick Actions Card -->
+            <div class="campus-card mb-4">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-lightning-charge-fill me-2 text-warning"></i>Quick Actions</span>
+                </div>
+                <div class="p-3 d-flex flex-column gap-2">
+                    <a th:href="@{/admin/students/new}" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-person-plus-fill"></i> Register New Student
+                    </a>
+                    <a th:href="@{/admin/lecturers/new}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-person-badge"></i> Add New Lecturer
+                    </a>
+                    <a th:href="@{/admin/courses}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-journal-plus"></i> Add Course Unit
+                    </a>
+                    <a th:href="@{/admin/assignments}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-person-check"></i> Assign Lecturer to Course
+                    </a>
+                    <a th:href="@{/admin/reports}" class="btn btn-outline-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-file-earmark-bar-graph"></i> Generate Reports
+                    </a>
+                </div>
+            </div>
+
+            <!-- Academic Programs Summary -->
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-mortarboard me-2 text-primary"></i>Programs</span>
+                </div>
+                <ul class="list-group list-group-flush small">
+                    <li th:each="prog : ${programs}" class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong th:text="${prog.code}">BCS</strong>
+                            <div class="text-muted" style="font-size: 0.75rem;" th:text="${prog.name}">Computer Science</div>
+                        </div>
+                        <span class="badge bg-light text-dark border" th:text="${prog.durationYears + ' Years'}">3 Years</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

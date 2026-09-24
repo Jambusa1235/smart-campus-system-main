@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'transcript')}">
+<head>
+    <title th:text="'Academic Transcript - ' + ${student.registrationNumber}">Official Transcript</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <div>
+            <h4 class="fw-bold mb-1">Official Academic Transcript</h4>
+            <p class="text-muted small mb-0">Certified record of complete coursework, examinations, grades and cumulative GPA.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-primary shadow-sm">
+                <i class="bi bi-printer me-1"></i> Print / Download PDF
+            </button>
+            <a th:href="@{/student/results}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Results
+            </a>
+        </div>
+    </div>
+
+    <!-- Official Printable Transcript Box -->
+    <div class="transcript-box">
+        <!-- University Header -->
+        <div class="transcript-header">
+            <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                <i class="bi bi-mortarboard-fill fs-1 text-primary"></i>
+                <div>
+                    <h1 class="mb-0">Smart Campus University</h1>
+                    <h2>Office of the Academic Registrar</h2>
+                </div>
+            </div>
+            <div class="text-uppercase fw-bold text-secondary small" style="letter-spacing: 2px;">
+                Official Academic Transcript of Records
+            </div>
+        </div>
+
+        <!-- Student Biographical Information -->
+        <div class="row g-3 mb-4 pb-3 border-bottom">
+            <div class="col-sm-6">
+                <div class="small"><span class="text-muted">Student Full Name:</span> <strong class="text-dark" th:text="${student.fullName}">Odoch joel</strong></div>
+                <div class="small"><span class="text-muted">Registration Number:</span> <strong class="text-primary" th:text="${student.registrationNumber}">STD/2025/001</strong></div>
+                <div class="small"><span class="text-muted">Gender:</span> <span th:text="${student.gender}">Male</span></div>
+            </div>
+            <div class="col-sm-6">
+                <div class="small"><span class="text-muted">Program of Study:</span> <strong class="text-dark" th:text="${student.program.name}">Bachelor of Science in Computer Science</strong></div>
+                <div class="small"><span class="text-muted">Department:</span> <span th:text="${student.program.department.name}">Computer Science</span></div>
+                <div class="small"><span class="text-muted">Degree Type / Duration:</span> <span th:text="${student.program.degreeType + ' (' + student.program.durationYears + ' Years)'}">Bachelor (3 Years)</span></div>
+            </div>
+        </div>
+
+        <!-- Semester by Semester Records -->
+        <div th:each="semRecord : ${transcript.semesterRecords}" class="mb-4">
+            <div class="d-flex justify-content-between align-items-center bg-light p-2 px-3 border rounded mb-2">
+                <strong class="text-primary">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    <span th:text="${semRecord.academicYear.name}">2025/2026</span> -
+                    <span th:text="${semRecord.semester.name}">Semester 1</span>
+                </strong>
+                <span class="small fw-bold">
+                    Semester GPA: <span class="badge bg-primary" th:text="${semRecord.gpa}">4.80</span> &bull;
+                    Credits Earned: <span th:text="${semRecord.totalCreditUnits} + ' CU'">14 CU</span>
+                </span>
+            </div>
+
+            <table class="table table-bordered table-sm mb-0">
+                <thead class="table-light">
+                    <tr class="small text-uppercase">
+                        <th style="width: 120px;">Course Code</th>
+                        <th>Course Unit Title</th>
+                        <th class="text-center" style="width: 90px;">Credit Units</th>
+                        <th class="text-center" style="width: 80px;">Mark (%)</th>
+                        <th class="text-center" style="width: 80px;">Grade</th>
+                        <th class="text-center" style="width: 90px;">Grade Point</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="g : ${semRecord.grades}" class="small">
+                        <td class="fw-bold" th:text="${g.courseRegistration.course.code}">CS101</td>
+                        <td th:text="${g.courseRegistration.course.title}">Intro to Computer Science</td>
+                        <td class="text-center" th:text="${g.courseRegistration.course.creditUnits}">3</td>
+                        <td class="text-center" th:text="${g.totalMark != null ? g.totalMark : '-'}">88.0</td>
+                        <td class="text-center fw-bold" th:text="${g.gradeLetter != null ? g.gradeLetter : '-'}">A</td>
+                        <td class="text-center fw-bold" th:text="${g.gradePoint != null ? g.gradePoint : '-'}">5.0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(transcript.semesterRecords)}" class="text-center text-muted py-4">
+            No completed academic records on file.
+        </div>
+
+        <!-- Cumulative Summary -->
+        <div class="row g-3 p-3 bg-light border rounded mb-5 mt-4">
+            <div class="col-sm-4 text-center border-end">
+                <div class="text-muted small text-uppercase fw-semibold">Total Credits Earned</div>
+                <div class="fs-4 fw-bold text-dark" th:text="${transcript.totalCreditsEarned} + ' CU'">14 CU</div>
+            </div>
+            <div class="col-sm-4 text-center border-end">
+                <div class="text-muted small text-uppercase fw-semibold">Cumulative GPA (CGPA)</div>
+                <div class="fs-4 fw-bold text-primary" th:text="${transcript.cumulativeGPA}">4.80</div>
+            </div>
+            <div class="col-sm-4 text-center">
+                <div class="text-muted small text-uppercase fw-semibold">Graduation Standing</div>
+                <div class="fs-5 fw-bold text-success" th:text="${transcript.academicStanding}">First Class Honours</div>
+            </div>
+        </div>
+
+        <!-- Grading Key & Verification -->
+        <div class="row g-3 pt-3 border-top small text-muted mb-5">
+            <div class="col-12">
+                <strong>Grading Scale Key:</strong>
+                A: 80-100% (5.0 GP) &bull;
+                B: 70-79% (4.0 GP) &bull;
+                C: 60-69% (3.0 GP) &bull;
+                D: 50-59% (2.0 GP) &bull;
+                F: &lt;50% (0.0 GP - Fail)
+            </div>
+        </div>
+
+        <!-- Signatures and Official Stamp -->
+        <div class="row text-center pt-4">
+            <div class="col-4">
+                <div style="border-bottom: 1px solid #000; height: 40px; width: 80%; margin: 0 auto;"></div>
+                <div class="small fw-bold mt-2">Academic Registrar</div>
+                <div class="text-muted" style="font-size: 0.7rem;">Signature & Date</div>
+            </div>
+            <div class="col-4">
+                <div class="border rounded-circle d-inline-flex align-items-center justify-content-center text-muted"
+                     style="width: 70px; height: 70px; border-style: dashed !important; font-size: 0.65rem;">
+                    OFFICIAL<br>STAMP
+                </div>
+            </div>
+            <div class="col-4">
+                <div style="border-bottom: 1px solid #000; height: 40px; width: 80%; margin: 0 auto;"></div>
+                <div class="small fw-bold mt-2">Dean of Faculty</div>
+                <div class="text-muted" style="font-size: 0.7rem;">Signature & Date</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

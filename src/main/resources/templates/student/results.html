@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'results')}">
+<head>
+    <title>My Results & GPA - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Academic Examination Results</h4>
+            <p class="text-muted small mb-0">
+                Performance breakdown for
+                <span class="text-primary fw-semibold" th:text="${currentYear != null ? currentYear.name : ''}">2025/2026</span> -
+                <span class="text-primary fw-semibold" th:text="${currentSemester != null ? currentSemester.name : ''}">Semester 1</span>.
+            </p>
+        </div>
+        <a th:href="@{/student/transcript}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-file-earmark-text-fill me-1"></i> Full Academic Transcript
+        </a>
+    </div>
+
+    <!-- GPA Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon green"><i class="bi bi-award-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-success" th:text="${semesterGPA}">0.00</h3>
+                    <div class="text-muted small">Semester Grade Point Average (GPA)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon blue"><i class="bi bi-trophy-fill"></i></div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-primary" th:text="${cgpa}">0.00</h3>
+                    <div class="text-muted small">Cumulative GPA (CGPA)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon orange"><i class="bi bi-patch-check-fill"></i></div>
+                <div>
+                    <h4 class="fw-bold mb-0 text-dark" th:text="${standing}">First Class</h4>
+                    <div class="text-muted small">Graduation Classification / Standing</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="campus-card">
+        <div class="card-header">
+            <span class="fw-bold"><i class="bi bi-journal-text me-2 text-primary"></i>Semester Graded Courses</span>
+            <span class="badge bg-primary" th:text="${#lists.size(grades) + ' Graded'}">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Course Title</th>
+                        <th>Credit Units</th>
+                        <th>Coursework (40)</th>
+                        <th>Final Exam (60)</th>
+                        <th>Total (100)</th>
+                        <th>Letter Grade</th>
+                        <th>Grade Point</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="g : ${grades}">
+                        <td class="fw-bold text-primary" th:text="${g.courseRegistration.course.code}">CS101</td>
+                        <td class="fw-semibold" th:text="${g.courseRegistration.course.title}">Intro to CS</td>
+                        <td><span class="badge bg-light text-dark border" th:text="${g.courseRegistration.course.creditUnits + ' CU'}">3 CU</span></td>
+                        <td th:text="${g.courseworkMark != null ? g.courseworkMark : '-'}">35.0</td>
+                        <td th:text="${g.examMark != null ? g.examMark : '-'}">52.0</td>
+                        <td>
+                            <strong th:text="${g.totalMark != null ? g.totalMark : '-'}">87.0</strong>
+                        </td>
+                        <td>
+                            <span th:class="'badge badge-grade-' + ${#strings.toLowerCase(g.gradeLetter)}" th:text="${g.gradeLetter}">A</span>
+                        </td>
+                        <td class="fw-bold" th:text="${g.gradePoint}">5.0</td>
+                        <td>
+                            <span th:class="${g.totalMark != null && g.totalMark >= 50 ? 'text-success fw-semibold' : 'text-danger fw-semibold'}"
+                                  th:text="${g.remarks}">Pass</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(grades)}">
+                        <td colspan="9" class="text-center text-muted py-5">
+                            <i class="bi bi-file-earmark-lock display-6 d-block mb-2 text-secondary"></i>
+                            Examination results for this semester have not yet been published by your lecturers.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

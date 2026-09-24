@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'attendance')}">
+<head>
+    <title>My Attendance - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Class Attendance Records</h4>
+            <p class="text-muted small mb-0">Track your attendance across all registered courses and verify examination eligibility.</p>
+        </div>
+        <div>
+            <span class="badge bg-warning-subtle text-dark border border-warning-subtle p-2">
+                <i class="bi bi-shield-check me-1 text-warning"></i> Examination Threshold: <strong>75% Attendance</strong>
+            </span>
+        </div>
+    </div>
+
+    <!-- Attendance Percentage Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4" th:each="reg : ${registrations}">
+            <div class="campus-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-primary-subtle text-primary fw-bold" th:text="${reg.course.code}">CS102</span>
+                    <span th:if="${attendanceRateMap.get(reg.course.id) >= 75.0}" class="badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i> Eligible for Exam
+                    </span>
+                    <span th:if="${attendanceRateMap.get(reg.course.id) < 75.0}" class="badge bg-danger">
+                        <i class="bi bi-exclamation-triangle me-1"></i> Below 75% Threshold
+                    </span>
+                </div>
+                <h6 class="fw-bold mb-2 text-truncate" th:text="${reg.course.title}">Data Structures</h6>
+                <div class="d-flex align-items-baseline gap-2 mb-2">
+                    <span class="display-6 fw-bold" th:text="${attendanceRateMap.get(reg.course.id) + '%'}">100%</span>
+                    <span class="text-muted small">attendance rate</span>
+                </div>
+                <!-- Progress bar -->
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar"
+                         th:classappend="${attendanceRateMap.get(reg.course.id) >= 75.0 ? 'bg-success' : 'bg-danger'}"
+                         role="progressbar"
+                         th:style="'width: ' + ${attendanceRateMap.get(reg.course.id)} + '%;'"
+                         th:aria-valuenow="${attendanceRateMap.get(reg.course.id)}"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" th:if="${#lists.isEmpty(registrations)}">
+            <div class="campus-card p-5 text-center text-muted">
+                <i class="bi bi-calendar-x display-6 d-block mb-3 text-secondary"></i>
+                <h5>No registered courses found for attendance tracking.</h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Session Logs -->
+    <div class="campus-card" th:each="reg : ${registrations}">
+        <div class="card-header">
+            <span class="fw-bold">
+                <i class="bi bi-list-check me-2 text-primary"></i>
+                <span th:text="${reg.course.code} + ' - ' + ${reg.course.title}">CS102 - Data Structures</span>
+            </span>
+            <span class="badge bg-light text-dark border" th:text="${reg.course.creditUnits + ' CU'}">4 CU</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-campus table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Lecture Topic</th>
+                        <th>Status</th>
+                        <th>Recorded By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="att : ${courseAttendanceDetails.get(reg.course.id)}">
+                        <td class="fw-bold" th:text="${att.attendanceDate}">2025-09-10</td>
+                        <td th:text="${att.topic != null && !att.topic.isEmpty() ? att.topic : 'Regular Lecture Session'}">Arrays</td>
+                        <td>
+                            <span th:class="'badge badge-' + ${#strings.toLowerCase(att.status)}" th:text="${att.status}">PRESENT</span>
+                        </td>
+                        <td class="text-muted small" th:text="${att.recordedBy != null ? att.recordedBy.title + ' ' + att.recordedBy.fullName : 'Instructor'}">Lecturer</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(courseAttendanceDetails.get(reg.course.id))}">
+                        <td colspan="4" class="text-center text-muted py-3">No lecture sessions logged yet for this course.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

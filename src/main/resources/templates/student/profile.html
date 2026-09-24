@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'profile')}">
+<head>
+    <title>My Profile - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-person-circle me-2 text-primary"></i>Student Academic Profile</span>
+                </div>
+                <div class="p-4">
+                    <div class="d-flex align-items-center gap-3 pb-4 mb-4 border-bottom">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-2" style="width: 70px; height: 70px;">
+                            <span th:text="${#strings.substring(student.fullName, 0, 1)}">J</span>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0" th:text="${student.fullName}">Odoch joel</h4>
+                            <span class="text-primary fw-semibold" th:text="${student.registrationNumber}">STD/2025/001</span>
+                            <span class="badge bg-success ms-2" th:text="${student.status}">ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Program of Study</label>
+                            <div class="fw-semibold" th:text="${student.program.name + ' (' + student.program.code + ')'}">BSc Computer Science</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Academic Department</label>
+                            <div class="fw-semibold" th:text="${student.program.department.name}">Computer Science</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Current Level</label>
+                            <div class="fw-semibold">Year <span th:text="${student.currentYear}">1</span>, Semester <span th:text="${student.currentSemester}">1</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Gender</label>
+                            <div class="fw-semibold" th:text="${student.gender}">Male</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Date of Birth</label>
+                            <div class="fw-semibold" th:text="${student.dateOfBirth != null ? student.dateOfBirth : 'Not specified'}">2003-05-14</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Phone Number</label>
+                            <div class="fw-semibold" th:text="${student.phoneNumber != null ? student.phoneNumber : 'Not specified'}">+256</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Campus Address / Hall of Residence</label>
+                            <div class="fw-semibold" th:text="${student.address != null ? student.address : 'Not specified'}">Hall 3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security & Password Change Card -->
+            <div class="campus-card mt-4">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-shield-lock me-2 text-warning"></i>Security & Password</span>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/student/profile/password}" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">New Password</label>
+                                <input type="password" class="form-control" name="newPassword" placeholder="Minimum 6 characters" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Confirm New Password</label>
+                                <input type="password" class="form-control" name="confirmPassword" placeholder="Re-type new password" required>
+                            </div>
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-outline-primary fw-semibold">
+                                    <i class="bi bi-key me-1"></i> Update My Password
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

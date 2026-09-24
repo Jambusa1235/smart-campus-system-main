@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'courses')}">
+<head>
+    <title>Manage Courses - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="row g-4">
+        <!-- Add Course Form -->
+        <div class="col-lg-4">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-plus-circle-fill me-2 text-primary"></i>Add Course Unit</span>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/courses/save}" th:object="${newCourse}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Course Code *</label>
+                            <input type="text" class="form-control" th:field="*{code}" placeholder="e.g. CS102" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Course Title *</label>
+                            <input type="text" class="form-control" th:field="*{title}" placeholder="e.g. Data Structures" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Credit Units (CU)</label>
+                                <input type="number" class="form-control" th:field="*{creditUnits}" min="1" max="6" value="3" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Department *</label>
+                                <select class="form-select" th:field="*{department}" required>
+                                    <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.code}">Dept</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Program</label>
+                            <select class="form-select" th:field="*{program}">
+                                <option value="">-- All / General --</option>
+                                <option th:each="p : ${programs}" th:value="${p.id}" th:text="${p.name + ' (' + p.code + ')'}">Program</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Year Level</label>
+                                <select class="form-select" th:field="*{yearLevel}">
+                                    <option value="1">Year 1</option>
+                                    <option value="2">Year 2</option>
+                                    <option value="3">Year 3</option>
+                                    <option value="4">Year 4</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Semester Offered</label>
+                                <select class="form-select" th:field="*{semesterOffered}">
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Syllabus Description</label>
+                            <textarea class="form-control" th:field="*{description}" rows="2" placeholder="Course syllabus overview..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                            <i class="bi bi-save me-1"></i> Save Course Unit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses List Table -->
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-book-half me-2 text-primary"></i>Course Units Directory</span>
+                    <span class="badge bg-primary" th:text="${#lists.size(courses) + ' Courses'}">0 Courses</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Title</th>
+                                <th>CU</th>
+                                <th>Dept</th>
+                                <th>Year/Sem</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c : ${courses}">
+                                <td class="fw-bold text-primary" th:text="${c.code}">CS101</td>
+                                <td class="fw-semibold" th:text="${c.title}">Intro to CS</td>
+                                <td><span class="badge bg-light text-dark border" th:text="${c.creditUnits + ' CU'}">3 CU</span></td>
+                                <td th:text="${c.department.code}">CS</td>
+                                <td>Year <span th:text="${c.yearLevel}">1</span>, Sem <span th:text="${c.semesterOffered}">1</span></td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/courses/delete/{id}(id=${c.id})}" class="btn btn-sm btn-outline-danger py-1 px-2"
+                                       onclick="return confirm('Delete this course unit?')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(courses)}">
+                                <td colspan="6" class="text-center text-muted py-4">No course units created yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'sessions')}">
+<head>
+    <title>Academic Sessions - Smart Campus</title>
+</head>
+<body>
+<div id="content">
+    <div class="row g-4 mb-4">
+        <!-- Academic Years Panel -->
+        <div class="col-lg-6">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-calendar-event me-2 text-primary"></i>Academic Years</span>
+                </div>
+                <div class="p-4 border-bottom">
+                    <form th:action="@{/admin/sessions/year/save}" th:object="${newYear}" method="post" class="row g-2">
+                        <div class="col-8">
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="e.g. 2026/2027" required>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary w-100 fw-semibold">Add Year</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Academic Year</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="y : ${academicYears}">
+                                <td class="fw-bold" th:text="${y.name}">2025/2026</td>
+                                <td>
+                                    <span th:if="${y.isCurrent}" class="badge bg-success">CURRENT ACTIVE</span>
+                                    <span th:unless="${y.isCurrent}" class="badge bg-light text-muted border">Inactive</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:unless="${y.isCurrent}" th:href="@{/admin/sessions/year/activate/{id}(id=${y.id})}"
+                                       class="btn btn-sm btn-outline-success py-1">Set Active</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semesters Panel -->
+        <div class="col-lg-6">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold"><i class="bi bi-calendar-range me-2 text-primary"></i>Semesters</span>
+                </div>
+                <div class="p-4 border-bottom">
+                    <form th:action="@{/admin/sessions/semester/save}" th:object="${newSemester}" method="post" class="row g-2">
+                        <div class="col-5">
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="e.g. Semester 1" required>
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select" th:field="*{academicYear}" required>
+                                <option th:each="y : ${academicYears}" th:value="${y.id}" th:text="${y.name}">Year</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary w-100 fw-semibold">Add</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-campus table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>Academic Year</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${semesters}">
+                                <td class="fw-bold" th:text="${s.name}">Semester 1</td>
+                                <td th:text="${s.academicYear.name}">2025/2026</td>
+                                <td>
+                                    <span th:if="${s.isCurrent}" class="badge bg-success">CURRENT ACTIVE</span>
+                                    <span th:unless="${s.isCurrent}" class="badge bg-light text-muted border">Inactive</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:unless="${s.isCurrent}" th:href="@{/admin/sessions/semester/activate/{id}(id=${s.id})}"
+                                       class="btn btn-sm btn-outline-success py-1">Set Active</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

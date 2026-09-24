@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::#content}, 'students')}">
+<head>
+    <title th:text="${student.id == null ? 'Register New Student' : 'Edit Student'} + ' - Smart Campus'">Student Form</title>
+</head>
+<body>
+<div id="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="campus-card">
+                <div class="card-header">
+                    <span class="fw-bold">
+                        <i class="bi bi-person-fill-add me-2 text-primary"></i>
+                        <span th:text="${student.id == null ? 'Register New Student' : 'Edit Student Details'}">Student Form</span>
+                    </span>
+                    <a th:href="@{/admin/students}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to List
+                    </a>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/students/save}" th:object="${student}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:if="*{user != null}" th:field="*{user.id}">
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Registration Number *</label>
+                                <input type="text" class="form-control" th:field="*{registrationNumber}" placeholder="e.g. STD/2025/003" required>
+                                <small class="text-muted" style="font-size: 0.75rem;">This will be used as the student's login username.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Full Name *</label>
+                                <input type="text" class="form-control" th:field="*{fullName}" placeholder="e.g. Sarah K. Namubiru" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold small">Gender</label>
+                                <select class="form-select" th:field="*{gender}">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold small">Date of Birth</label>
+                                <input type="date" class="form-control" th:field="*{dateOfBirth}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold small">Phone Number</label>
+                                <input type="text" class="form-control" th:field="*{phoneNumber}" placeholder="+256-700-000000">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Residential Address / Hall of Residence</label>
+                            <input type="text" class="form-control" th:field="*{address}" placeholder="e.g. Complex Hall, Room 12">
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Degree Program *</label>
+                                <select class="form-select" th:field="*{program}" required>
+                                    <option th:each="p : ${programs}" th:value="${p.id}" th:text="${p.name + ' (' + p.code + ')'}">Program</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold small">Year Level</label>
+                                <select class="form-select" th:field="*{currentYear}">
+                                    <option value="1">Year 1</option>
+                                    <option value="2">Year 2</option>
+                                    <option value="3">Year 3</option>
+                                    <option value="4">Year 4</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold small">Semester</label>
+                                <select class="form-select" th:field="*{currentSemester}">
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Enrollment Status</label>
+                                <select class="form-select" th:field="*{status}">
+                                    <option value="ACTIVE">ACTIVE</option>
+                                    <option value="GRADUATED">GRADUATED</option>
+                                    <option value="SUSPENDED">SUSPENDED</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" th:if="${student.id == null}">
+                                <label class="form-label fw-semibold small">Account Password</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="rawPassword" name="rawPassword" placeholder="Auto-generated if left blank">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="generateRandomPassword('rawPassword')">
+                                        <i class="bi bi-shuffle me-1"></i> Generate
+                                    </button>
+                                </div>
+                                <small class="text-muted" style="font-size: 0.75rem;">
+                                    <i class="bi bi-info-circle me-1"></i>Leave blank for system to automatically create a secure password, or click Generate.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/admin/students}" class="btn btn-light border">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                                <i class="bi bi-save me-1"></i> Save Student Record
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
